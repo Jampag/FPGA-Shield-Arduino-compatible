@@ -1,8 +1,8 @@
 ## Version 1; compatible with Ver 3 REV 00; FPGA_PN XC7S15-2FTGB196I
 
 ## Clock
-set_property -dict {PACKAGE_PIN D1 IOSTANDARD LVCMOS33} [get_ports {clk}]; #D1 100MHz System Clock
-create_clock -period 10.000 -waveform {0.000 5.000} [get_ports {clk}];
+#set_property -dict {PACKAGE_PIN D1 IOSTANDARD LVCMOS33} [get_ports {clk}]; #D1 100MHz System Clock
+#create_clock -period 10.000 -waveform {0.000 5.000} [get_ports {clk}];
 
 
 ### Costum PMOD Header 'E'
