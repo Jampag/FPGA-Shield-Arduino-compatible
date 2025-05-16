@@ -48,7 +48,7 @@
 #set_property -dict { PACKAGE_PIN M14 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { pins[33] }]; #N4
 #set_property -dict { PACKAGE_PIN P11 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { pins[34] }]; #N5
 #set_property -dict { PACKAGE_PIN N10 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { pins[35] }]; #N6
-#set_property -dict { PACKAGE_PIN N11 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { SW1 }]; #N7 Sch=SW1 shared with SW1 Button
+#set_property -dict { PACKAGE_PIN N11 IOSTANDARD LVCMOS33 PULLUP true } [get_ports { SW1 }]; #N7 Sch=SW1 shared with SW1 Button
 #set_property -dict { PACKAGE_PIN M11 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { pins[36] }]; #N8 
 #set_property -dict { PACKAGE_PIN M10 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { L2 }]; #N9 Sch=L2 shared with L2 LED
 #set_property -dict { PACKAGE_PIN M12 IOSTANDARD LVCMOS33 PULLUP true DRIVE 4 } [get_ports { L1 }]; #N10 Sch=L1 shared with L1 LED
