@@ -1,3 +1,4 @@
 # FPGA-Shield-Arduino
 MODULO FPGA SPARTAN7. Arduino shield or "stand-alone" evaluation board
-![photo_5846217017420531318_y](https://github.com/user-attachments/assets/4a0828b4-4116-4ba1-966c-e1412d2a7e7a)
+![image](https://github.com/user-attachments/assets/ca62c845-772c-4b98-bee7-0aa1601cdc28)
+
