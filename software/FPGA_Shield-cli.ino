@@ -1,6 +1,6 @@
-/*
+/* TBD
+* Author:Jampag [https://github.com/Jampag/UART_to_SPI-NOR.git]
  */
-
 #include <SPI.h>
 #define XON  0x11
 #define XOFF 0x13
@@ -36,7 +36,8 @@ int command=99;
 uint32_t clkSPI = 2000000;
 BitOrder bitOrder = MSBFIRST;
 uint8_t spiMode = SPI_MODE0;
-bool swSPIFlag = true; // SPI Software D12=MOSI D11=MISO
+SPISettings mySettings(clkSPI, bitOrder, spiMode);
+bool swSPIFlag = false; // SPI Software D12=MOSI D11=MISO
 // SPI-NOR
 uint32_t flashAddress = 0;
 bool inWriteLoop_FLASH = false;
@@ -66,6 +67,10 @@ void setup() {
     pinMode(12, INPUT_PULLUP);
     pinMode(SCK, INPUT_PULLUP);
     pinMode(11, INPUT_PULLUP);
+    SPI.begin();
+    mySettings = SPISettings(clkSPI, bitOrder, spiMode);
+    SPI.beginTransaction(mySettings);
+    disable_SPI();
     delay(1000);
     showMenu();
 }
@@ -311,19 +316,19 @@ void showMenu() {
     delay(100);
     Serial.println("\033[7m            MENU  Main         Ver0.0 \033[0m");
     Serial.println(pg_fail);
-    Serial.println(" 1. Load FPGA: UART to SPI               ");
-    Serial.println(" 2. Load FPGA: UART-XMODEM to SPI        ");
+    Serial.println(" 1. Upload bitsteam: UART to SPI         ");
+    Serial.println(" 2. Upload bitsteam: XMODEM to SPI       ");
     Serial.println(" 3. FPGA reset cycle                     ");    
     Serial.println(" 4. FPGA status DONE                     ");        
     Serial.println(" 5. UART bridge                          ");
-    Serial.println(" 6. Reset Arduino or CTRL+R              ");
+    Serial.println(" 6. Reset Arduino board or CTRL+R        ");
     Serial.println(" \033[7m    MENU SPI-NOR                 \033[0m");
     Serial.println(" 7.  chipErase [Opcode C7h]");
     Serial.println(" 8.  CRC32 calc"); 
-    Serial.println(" 9.  Download bin: UART mode");
-    Serial.println(" 10. Download bin: UART-XMODEM mode");
+    Serial.println(" 9.  Upload bin-file: UART mode");
+    Serial.println(" 10. Upload bin-file: XMODEM mode");
     Serial.println(" 11. deviceID  [Opcode 9Fh RDID]");
-    Serial.println(" 12. Enable Advanced SPI-NOR menu");
+    Serial.println(" 12. Enable Advanced MENU");
     
     if (flagADVMenu){
       Serial.println(" \033[7m      MENU Advanced               \033[0m");
@@ -335,8 +340,8 @@ void showMenu() {
       Serial.println(" 18. statusRegister [Opcode=0x05 RDSR]");
       Serial.println(" 19. writeData [Opcode 02h PP]");
       Serial.println(" 20. deviceID  [Opcode 90h REMS]");    
-      Serial.println(" 21. Dump SNOR-Flash: UART mode");
-      Serial.println(" 22. Dump SNOR-Flash: UART-XMODEM mode");
+      Serial.println(" 21. Download SNOR-Flash: UART mode");
+      Serial.println(" 22. Download SNOR-Flash: XMODEM mode");
       Serial.println(" 23. Custom SPI Transaction");
       Serial.println(" 24. FPGA Reset: Hold");
       Serial.println(" 25. FPGA Reset: Realese");
@@ -419,6 +424,7 @@ void init_FPGA (){ //Initialized FPGA for SPI programming
     }
     
   }
+  pinMode(INIT_B, INPUT_PULLUP);
   pinMode(PROGRAM_B, INPUT_PULLUP);
 
 }
@@ -428,7 +434,7 @@ void waiting_DONE_FPGA (){ //check status DONE FPGA
   execStart = millis();
   bool status_DONE=digitalRead(DONE);
   for(uint8_t  i_done = 0; i_done < 10; i_done++){
-    for (uint16_t  i = 0; i < 32000; i++) {
+    for (uint16_t  i = 0; i < 320; i++) {
         SPI_TX(0x00); // Invia dummy clock
     }
     status_DONE=digitalRead(DONE);
@@ -519,7 +525,7 @@ void UART_to_SPI() {
     Serial.println(" *       Speed=115200; Data=8b; Parity=none; Stop bits=1");
     Serial.println(" *       Flowcontrol=Xon/Xoff; Transmit delay=0msec");
     Serial.println(" * Version:");
-    Serial.println(" *     -Tested with verion 5.3");
+    Serial.println(" *     -Tested with verion 5.4.0");
     Serial.println(" * Tranfer setting:");
     Serial.println(" *     -File>Send file> ");
     Serial.println(" *         Filename: <file>");
@@ -528,6 +534,7 @@ void UART_to_SPI() {
     Serial.println(" *         [send size(bytes): 256 ]");
     Serial.println(" *         delay time(ms): <0 or 1>");
     Serial.println("\nMinimun file size is 256byte!");
+    Serial.println("\n\033[30;43m Do not press any button on keyboard!\033[0m");
     Serial.println("\nReady to recive data from UART...");
       
   }
@@ -622,11 +629,11 @@ void UART_to_SPI() {
           bufferIndex=0;
           
           waiting_DONE_FPGA();
+          disable_SPI();	
           bufferIndex=0;
           totalBytesWritten=0;
           totalBlocksWritten=0;
-          Serial.print("> ");
-          //disable_SPI();	
+          Serial.print(">");
           pinMode(12, INPUT_PULLUP);
       }
   }
@@ -705,16 +712,17 @@ void setSPI() {
         default:
             Serial.println("Invalid mode");
             return;
-    }
-    SPI.begin();
-    SPI.beginTransaction(SPISettings(clkSPI, bitOrder, spiMode));
+    }   
+    mySettings = SPISettings(clkSPI, bitOrder, spiMode);
 }
 
 void init_default_SPI(bool swFlag) {
     pinMode(CS_FLASH,OUTPUT);
+    digitalWrite(CS_FLASH, HIGH);
     if (swFlag == false){
+      mySettings = SPISettings(clkSPI, bitOrder, spiMode);
       SPI.begin();
-      SPI.beginTransaction(SPISettings(clkSPI, bitOrder, spiMode));
+      SPI.beginTransaction(mySettings);
       swSPIFlag = false;
     } else{
       pinMode(11, INPUT_PULLUP); 
@@ -728,6 +736,9 @@ void init_default_SPI(bool swFlag) {
 
 void disable_SPI() {
     if (swSPIFlag == false){
+      mySettings = SPISettings(1, bitOrder, spiMode);//Settaggio sensibile al cambio.
+      SPI.beginTransaction(mySettings);
+      SPI.endTransaction();
       SPI.end();
     }
     pinMode(11, INPUT_PULLUP); 
@@ -765,6 +776,7 @@ void receiveXmodem_SPI() {
 
     Serial.print("Parsed file size byte: ");
     Serial.println(fileSize);
+    Serial.println("\n\033[30;43m Do not press any button on keyboard!\033[0m");
     Serial.print("Ready to receive...");
 
     while (!Serial.available()) {
@@ -1033,6 +1045,7 @@ void readFlash() {
 }
 
 void readFastFlash() {
+  
     Serial.print(" Enter start address (hex): ");
     addr = strtoul(readSerialCommand().c_str(), NULL, 16);
 
@@ -1062,12 +1075,17 @@ void readFastFlash() {
             if (i != 0) {
                 Serial.print("  |");
                 Serial.print(asciiBuffer);
-                Serial.print("|");
+                Serial.println("|");
             }
             // Inizia una nuova riga
-            Serial.print("\n\r0x");
-            Serial.print(addr + i, HEX);
-            Serial.print(": ");
+            //Serial.print("\n\r0x");
+            //Serial.print(addr + i, HEX);
+            //Serial.print(": ");
+            Serial.print("0x");
+            char addrBuffer[5];
+            sprintf(addrBuffer, "%05lX", (addr + i));
+            Serial.print(addrBuffer);
+            Serial.print(": ");            
         }
 
         byte data = SPI_RX();
@@ -1205,6 +1223,7 @@ void writePage(uint32_t addr, char *data, int len) {
 void UART_to_FLASH(){
   if (inWriteLoop_FLASH == false){
     inWriteLoop_FLASH = true;
+    Serial.println("\n\033[30;43mExecute chip Erase or erase blocks equal to the file size!\033[0m");
     Serial.print("Enter start address (hex): ");
     flashAddress = strtoul(readSerialCommand().c_str(), NULL, 16); //
     inWriteLoop_FLASH = true;
@@ -1217,7 +1236,7 @@ void UART_to_FLASH(){
     Serial.println(" *       Speed=115200; Data=8b; Parity=none; Stop bits=1");
     Serial.println(" *       Flowcontrol=Xon/Xoff; Transmit delay=0msec");
     Serial.println(" * Version:");
-    Serial.println(" *     -Tested with verion 5.3");
+    Serial.println(" *     -Tested with verion 5.4.0");
     Serial.println(" * Tranfer setting:");
     Serial.println(" *     -File>Send file> ");
     Serial.println(" *         Filename: <file>");
@@ -1225,8 +1244,8 @@ void UART_to_FLASH(){
     Serial.println(" *         delay type: <per sendsize>");
     Serial.println(" *         [send size(bytes): 256 ]");
     Serial.println(" *         delay time(ms): <0 or 1>");
-    Serial.println("\nExecute chip Erase or erase blocks equal to the file size!");
     Serial.println("\nMinimun file size is 256byte!");
+    Serial.println("\n\033[30;43m Do not press any button on keyboard!\033[0m");
     Serial.println("\nReady to recive data from UART...");
   }	      
   
@@ -1412,7 +1431,7 @@ void dumpFlashToUART() {
     Serial.println(" *     -Setup>Serial port> Speed=115200; Data=8b; Parity=none; Stop bits=1;");
     Serial.println(" *       Flowcontrol=Xon/Xoff; Transmit delay=0msec");
     Serial.println(" * Version:");
-    Serial.println(" *     -Tested with verion 5.3");
+    Serial.println(" *     -Tested with verion 5.4.0");
     Serial.println(" * Acquire setting:");
     Serial.println(" *     -File>Log...> ");
     Serial.println(" *         Filename: <file>");
@@ -1430,7 +1449,7 @@ void dumpFlashToUART() {
     Serial.print(" Enter number of bytes (hex): ");
     uint32_t numBytes = strtoul(readSerialCommand().c_str(), NULL, 16);
 
-    Serial.print(" Enter the waiting time before/after acquisition: ");
+    Serial.print(" Enter the waiting time before/after acquisition(s): ");
     int wait = strtoul(readSerialCommand().c_str(), NULL, 10);
 
     pinMode(SCK, OUTPUT);
@@ -1473,6 +1492,10 @@ void dumpFlashToUART() {
         bytesRead += chunkSize;
         addr += chunkSize;
     }
+    for (int i = 0;i < wait; i++){
+      digitalWrite(SCK, LOW);
+      delay(1000);
+    }    
 }
 
 
@@ -1511,7 +1534,8 @@ void customSPITransaction() {
     }
     execStop = millis();
     digitalWrite(CS_FLASH, HIGH);
-    Serial.print("\nExec. : ");Serial.print(execStop - execStart);Serial.println("ms");
+    Serial.println("");
+    Serial.println("Exec. : ");Serial.print(execStop - execStart);Serial.println("ms");
 }
 
 void receiveXmodem() {
@@ -1524,6 +1548,7 @@ void receiveXmodem() {
     const uint8_t MAX_RETRIES = 10;
     // Chiedi la dimensione del file
     Serial.println(" Opcode 02h");
+    Serial.println("\n\033[30;43mExecute chip Erase or erase blocks equal to the file size!\033[0m");
 
 
     Serial.print("Enter FPGA size (\033[7m1\033[0m=7S6, \033[7m2\033[0m=7S15, \033[7m3\033[0m=7S25, \033[7m4\033[0m=7S50, \033[7m5\033[0m=custom): ");
@@ -1550,6 +1575,7 @@ void receiveXmodem() {
     Serial.print("Enter start address (hex): ");
     flashAddress = strtoul(readSerialCommand().c_str(), NULL, 16);
 
+    Serial.println("\n\033[30;43m Do not press any button on keyboard!\033[0m");
     Serial.print("Ready to receive...");    
 
     while (!Serial.available()) {
@@ -1626,7 +1652,7 @@ void receiveXmodem() {
 
         else if (header == EOT) { // End of Transmission
             Serial.write(ACK);
-            Serial.println("XMODEM Transfer Completed!");
+            Serial.println("\nXMODEM Transfer Completed!");
             Serial.println("File saved into SPI NOR!");
             Serial.print("Total bytes written: ");
             Serial.println(bytesWritten);   
