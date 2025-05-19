@@ -2,6 +2,11 @@
 MODULO FPGA SPARTAN7. Arduino shield or "stand-alone" evaluation board
 ![image](https://github.com/user-attachments/assets/ca62c845-772c-4b98-bee7-0aa1601cdc28)
 
+# Quick Start guide
+
+See [Quick-start-guide](documents/Quick-start-GR01.pdf)
+
+
 ## Disclaimer
 
 "Arduino" è un marchio registrato di Arduino SA.  
