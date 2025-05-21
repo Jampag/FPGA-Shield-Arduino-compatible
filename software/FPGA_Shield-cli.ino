@@ -112,7 +112,7 @@ void loop() {
                         
             //disable_SPI();
             UART_to_SPI();
-            return;
+            break;
         }
         case 2: // XMODEM to SPI FPGA programming
 
@@ -634,7 +634,6 @@ void UART_to_SPI() {
           totalBytesWritten=0;
           totalBlocksWritten=0;
           Serial.print(">");
-          pinMode(12, INPUT_PULLUP);
       }
   }
 }
