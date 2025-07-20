@@ -790,7 +790,7 @@ void receiveXmodem_SPI() {
         uint8_t header = Serial.read();
 
         if (header == SOH) { // Start of Header 128-byte packet
-        Serial.print("Header received: ");
+            //Serial.print("Header received: ");
             uint8_t blockNum = Serial.read();
             uint8_t blockNumInv = Serial.read();
             Serial.readBytes(buffer, XMODEM_BUFFER_SIZE); // Legge 128 byte
