@@ -8,8 +8,11 @@ MODULO FPGA SPARTAN7. Arduino shield or "stand-alone" evaluation board
 
 # Quick Start guide
 
-See [Quick-start-guide](documents/Quick-start-GR01.pdf)
+See [Quick-start-guide ITALIAN](documents/Quick-start-GR01.pdf)
 
+# Block diagram 
+
+See [BlockDiagram.pdf](documents/BlockDiagram.pdf)
 
 ## Disclaimer
 
