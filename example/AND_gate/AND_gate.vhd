@@ -1,33 +1,30 @@
-----------------------------------------------------------------------------------
--- Autor: Jampag
+-------------------------------------------------------------------------------
+-- File : Port_AND
+-- Autor : F
+-- Description: AND PORT
+--        ______
+-- A ----|      \
+--       | AND   )---- Y
+-- B ----|______/
 -- 
--- Create Date: 10.10.2025 
--- Design Name: AND_gate
--- Module Name: AND_gate
--- Project Name: AND_gate
--- Target Devices: MODULO FPGA Ver3
--- Tool Versions: 2024.2
--- Description:  
---      A simple AND gate project
--- Dependencies: 
--- Additional Comments:x
--- 
-----------------------------------------------------------------------------------
+--              
+-------------------------------------------------------------------------------
+
 -- Library 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 
 -- Entity Declaration
-entity AND_gate is
+entity Port_AND is
     port (
-        A		: in std_logic; 
+        A		: in std_logic;
         B		: in std_logic;
         Y		: out std_logic);
-end AND_gate;
+end Port_AND;
 
 -- Architecture
-architecture Behavioral of AND_gate is
+architecture behavior of Port_AND is
 
 -- Begin Architecture
 begin
@@ -35,4 +32,5 @@ begin
     -- Signal Assignments
     Y <= (A AND B);
     
-end Behavioral;
+	
+end behavior;
