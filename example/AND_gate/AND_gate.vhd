@@ -2,7 +2,7 @@
 -- Autor: Jampag
 -- 
 -- Create Date: 10.10.2025 
--- Design Name: AND_gate`
+-- Design Name: AND_gate
 -- Module Name: AND_gate
 -- Project Name: AND_gate
 -- Target Devices: MODULO FPGA Ver3
