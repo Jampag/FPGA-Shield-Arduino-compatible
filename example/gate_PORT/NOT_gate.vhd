@@ -2,15 +2,20 @@
 -- Autor: Jampag
 -- 
 -- Create Date: 10.10.2025 
--- Design Name: AND_gate`
--- Module Name: AND_gate
--- Project Name: AND_gate
+-- Design Name: NOT_gate`
+-- Module Name: NOT_gate
+-- Project Name: NOT_gate
 -- Target Devices: MODULO FPGA Ver3
 -- Tool Versions: 2024.2
 -- Description:  
---      A simple AND gate project
+--      A simple NOT gate project
+--             ___
+--            |   \
+--      A ----|NOT )---- Y
+--            |___/
+-- 
 -- Dependencies: 
--- Additional Comments:x
+-- Additional Comments: x
 -- 
 ----------------------------------------------------------------------------------
 -- Library 
@@ -19,20 +24,19 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 
 -- Entity Declaration
-entity AND_gate is
+entity NOT_gate is
     port (
-        A		: in std_logic; 
-        B		: in std_logic;
+        A		: in std_logic;
         Y		: out std_logic);
-end AND_gate;
+end NOT_gate;
 
 -- Architecture
-architecture Behavioral of AND_gate is
+architecture Behavioral of NOT_gate is
 
 -- Begin Architecture
 begin
 
     -- Signal Assignments
-    Y <= (A AND B);
+    Y <= NOT A ;
     
 end Behavioral;

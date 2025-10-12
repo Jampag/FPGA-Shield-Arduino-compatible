@@ -2,13 +2,18 @@
 -- Autor: Jampag
 -- 
 -- Create Date: 10.10.2025 
--- Design Name: AND_gate`
--- Module Name: AND_gate
--- Project Name: AND_gate
+-- Design Name: XNOR_gate`
+-- Module Name: XNOR_gate
+-- Project Name: XNOR_gate
 -- Target Devices: MODULO FPGA Ver3
 -- Tool Versions: 2024.2
 -- Description:  
---      A simple AND gate project
+--      A simple XOR gate project
+--             ______
+--      A ----\\     \
+--             || XOR )o--- Y
+--      B ----//_____/
+-- 
 -- Dependencies: 
 -- Additional Comments:x
 -- 
@@ -19,20 +24,20 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 
 -- Entity Declaration
-entity AND_gate is
+entity XNOR_gate is
     port (
         A		: in std_logic; 
         B		: in std_logic;
         Y		: out std_logic);
-end AND_gate;
+end XNOR_gate;
 
 -- Architecture
-architecture Behavioral of AND_gate is
+architecture Behavioral of XNOR_gate is
 
 -- Begin Architecture
 begin
 
     -- Signal Assignments
-    Y <= (A AND B);
+    Y <= NOT (A XOR B);
     
 end Behavioral;
