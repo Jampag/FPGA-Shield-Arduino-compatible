@@ -31,7 +31,7 @@ entity BLINK is
     Generic (
         NUM_LED         : integer := 2;
         CLK_RATE        : integer := 100_000_000;  -- 100MHz
-        BLINK_RATE      : integer := 2);         -- 2Hz
+        BLINK_RATE      : integer := 2);         -- toogle/second
     Port (
         Led_out         : out std_logic_vector(NUM_LED - 1 downto 0);
         Clk             : in std_logic;
