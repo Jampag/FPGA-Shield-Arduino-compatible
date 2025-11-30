@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- File : DIV_simple.vhd
+-- File : DFF_simple.vhd
 -- Autor : Jampag
 -- Data : 2025-11-28             
 -- Description: DFF 
