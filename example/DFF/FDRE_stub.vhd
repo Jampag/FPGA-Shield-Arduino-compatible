@@ -22,7 +22,7 @@ use UNISIM.VComponents.all;
 
 entity FDRE_stub is
   generic(
-    INIT : std_logic  := '1' -- Initial value of register ('0' or '1')
+    INIT : bit  := '1' -- Initial value of register ('0' or '1')
     );
 
   port(
@@ -52,5 +52,6 @@ begin
     );
 
 end rtl;
+
 
 
