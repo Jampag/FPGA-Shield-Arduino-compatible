@@ -29,7 +29,7 @@ use UNISIM.VComponents.all;
 
 entity FDPE_stub is
   generic(
-    INIT : std_logic  := '1'
+    INIT : bit  := '1'
     );
 
   port(
@@ -43,14 +43,11 @@ end FDPE_stub;
 
 architecture behavior of FDPE_stub is
 
-    -- Convesion std_logic to bit
-    constant INIT_bit : bit := '1' when INIT = '1' else '0';
-
 begin
 
     FDPE_inst : FDPE
     generic map (
-        INIT => INIT_bit  -- Converted constant
+        INIT => INIT  
     )
     port map (
         Q   => Q,   -- Data output
