@@ -27,7 +27,7 @@ use IEEE.STD_LOGIC_1164.all;
 library UNISIM;
 use UNISIM.VComponents.all;
 
-entity FDPE_stub is
+entity FDPE_stub_bd is
   generic(
     INIT : bit  := '1'
     );
@@ -39,9 +39,9 @@ entity FDPE_stub is
     D   : in std_logic;
     PRE : in std_logic
     );
-end FDPE_stub;
+end FDPE_stub_bd;
 
-architecture behavior of FDPE_stub is
+architecture behavior of FDPE_stub_bd is
 
 
 begin
