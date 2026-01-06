@@ -43,10 +43,10 @@ end FDPE_stub_bd;
 
 architecture behavior of FDPE_stub_bd is
 
-
-begin
     -- Convesion std_logic to bit
     constant INIT_bit : bit := '1' when INIT = '1' else '0';
+
+begin
 
     FDPE_inst : FDPE
     generic map (
