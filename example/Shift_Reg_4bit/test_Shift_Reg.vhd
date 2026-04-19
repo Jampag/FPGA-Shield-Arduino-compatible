@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : test_Shigt_reg
 -- Testbanch source file : Shift_Reg.vhd
--- Autor : Jampag
+-- Author : Jampag
 -- Description: This is an implementation of a 4 bit register
 --              cehavioral architecture.
 --
