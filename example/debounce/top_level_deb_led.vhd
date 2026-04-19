@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : top_level_deb_led.vhd
--- Autor : Jampag
--- Data : 2026 Jan 27
+-- Author : Jampag
+-- Date : 2026 Jan 27
 -- Description: Top-level example, how to implement anti-debounce circuit
 --                _______________________________________                
 --               |                                       |
