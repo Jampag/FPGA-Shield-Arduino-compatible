@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : BLINK
--- Autor : Jampag
+-- Author : Jampag
 -- Description: Use a counter that will blink all LEDs on/off at regulare
 --              intervals. The blink rate is changeble through the generic
 --              of the design. There is an active low reset that when asseted
