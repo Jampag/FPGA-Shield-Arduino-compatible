@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 -- File : test_Debounce_btn
 -- Testbanch source file : Debounce_btn.vhd
--- Autor : Jampag
--- Data : 2026 Jan 25
+-- Author : Jampag
+-- Date : 2026 Jan 25
 -- Description: validate the debounce module, to easy simulation reduce the 
 --              DEBOUNCE_cnt at 4
 --
