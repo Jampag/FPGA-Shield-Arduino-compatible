@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : BLINK_binary_cnt
--- Autor : Jampag
+-- Author : Jampag
 -- Description: Counter binary with 2 LEDs
 --              Used  2 counter, the main counter is the refresh rate 
 --              (blink rate) and the second counter is binary LEDs 
