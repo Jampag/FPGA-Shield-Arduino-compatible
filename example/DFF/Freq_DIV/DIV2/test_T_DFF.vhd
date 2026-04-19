@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : test_T_DFF
--- Autor : Jampag
+-- Author : Jampag
 -- Description: T DFlip Flop based on DFF
 -- Block Diagram:
 --
