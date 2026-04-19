@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : test_DFF
--- Autor : Jampag
+-- Author : Jampag
 -- Description: D Flip Flop with Clock Enable and Sync Reset
 -- Block Diagram:
 --
