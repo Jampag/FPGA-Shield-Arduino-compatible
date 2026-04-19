@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : LED_toggle
--- Autor : Jampag
--- Data : 2026 Jan 25
+-- Author : Jampag
+-- Date : 2026 Jan 25
 -- Description: Change led status when btn is relesad
 --                __    __    __    __  
 --     clk       ^  |  ^  |  ^  |  ^  | 
