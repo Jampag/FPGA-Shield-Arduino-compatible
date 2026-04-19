@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : Debounce_btn
--- Autor : Jampag
--- Data : 2026 Jan 25
+-- Author : Jampag
+-- Date : 2026 Jan 25
 -- Description: It a debounce module for button, check input status for 
 --  n time(DEBOUNCE_cnt*i_clk) if it stable, the OUT is equal IN status.
 --  Set a inital value(INIT_state), if IN is pulluped chose '1' 
