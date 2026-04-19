@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------
--- Autor: Jampag
+-- Author: Jampag
 -- 
 -- Create Date: 25.04.2025 18:14:31
 -- Design Name: Macro UART RX and TX
