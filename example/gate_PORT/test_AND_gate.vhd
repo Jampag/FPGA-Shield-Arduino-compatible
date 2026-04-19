@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : test_AND_gate
--- Autor : Jampag
+-- Author : Jampag
 -- Description: AND Gate
 --        ______
 -- A ----|      \
