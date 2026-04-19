@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : DIV_by_2_DFF.vhd
--- Autor : Jampag
--- Data : 2025-01-25             
+-- Author : Jampag
+-- Date : 2025-01-25             
 -- Description: Clk DIV by 2 
 --                 __
 --                /  |
