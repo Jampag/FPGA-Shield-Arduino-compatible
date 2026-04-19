@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : Shift register
--- Autor : Jampag
+-- Author : Jampag
 -- Description: This is an implementation of a 4 bit register
 --              behavioral architecture.
 --
