@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : DFF_simple.vhd
--- Autor : Jampag
+-- Author : Jampag
 -- Data : 2025-11-28             
 -- Description: DFF 
 --              ______     
