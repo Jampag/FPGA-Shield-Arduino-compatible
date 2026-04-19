@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : clock_div_strobe
--- Autor : Jampag
--- Data : 2026 March 08
+-- Author : Jampag
+-- Date : 2026 March 08
 -- Description: Clock divider by X, used a CE of the BUFGECE
 --              __    __    __    __     __     __  
 -- i_clk       ^  |  ^  |  ^  |  ^  |   ^  |   ^  | 
