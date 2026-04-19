@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : DFF.vhd
--- Autor : Jampag
+-- Author : Jampag
 -- Description: D Flip Flop with Clock Enable and Sync Reset
 --            ______
 -- Data  ----|      |---- Q
