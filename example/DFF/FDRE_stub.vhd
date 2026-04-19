@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : FDRE_stub
--- Autor : Jampag
--- Data : 2025-02-01
+-- Author : Jampag
+-- Date : 2025-02-01
 -- Description: Primitive Xilinx UG953
 --            ______
 -- Data  ----|      |---- Q
