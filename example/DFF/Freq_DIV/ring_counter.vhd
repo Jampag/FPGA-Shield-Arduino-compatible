@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- File : ring_counter
--- Autor : Jampag
+-- Author : Jampag
 -- Date : 2026-01-11
 -- Description: ring-counter with sync reset
 --             __    __    __    __    __    __    __    __    __    __   
