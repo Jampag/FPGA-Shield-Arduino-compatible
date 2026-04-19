@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : test_DIV_by_2_DFF.vhd
 -- Testbanch source file : DIV_by_2_DFF.vhd
--- Autor : Jampag
+-- Author : Jampag
 -- Description: This is an implementation of a Div by 2 Clk
 --              Behavioral architecture.
 --
