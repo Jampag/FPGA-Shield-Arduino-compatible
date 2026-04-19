@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File : FDPE_stub_bd
--- Autor : Jampag
--- Data : 2026-01-06
+-- Author : Jampag
+-- Date : 2026-01-06
 -- Description: Primitive Xilinx UG768
 --
 --        P ____
