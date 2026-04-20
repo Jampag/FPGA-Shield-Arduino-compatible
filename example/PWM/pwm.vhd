@@ -84,7 +84,9 @@ begin
                 if freq_count < MAX_FREQ_COUNT_U - 1 then
                     freq_count <= freq_count + 1;
 
-                    if pwm_count < pwm_count_max then
+                    if pwm_count_max = (pwm_count_max'range => '1') then
+                        reg_PWM <= '1';
+                    elsif pwm_count < pwm_count_max then
                         reg_PWM <= '1';
                         if pwm_step_count < PWM_STEP_U then
                             pwm_step_count <= pwm_step_count + 1;
