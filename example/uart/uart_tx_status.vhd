@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 -- File     : uart_tx_status.vhd
 -- Author   : Jampag
--- Date     : 2026 may 02
--- Revision : 1.0
+-- Date     : 2026 may 03
+-- Revision : 2.0
 -- Description:
 --   UART status transmitter example.
 --   The module periodically transmits the value of an input status bus
@@ -15,9 +15,14 @@
 --   Each input byte is converted into two ASCII hexadecimal characters.
 --   The message is terminated with CR and LF characters.
 --
+--   The transmission can be started in two different ways, selected by the
+--   generic G_TRIGGER:
+--
+--     G_TRIGGER = false  -> message is transmitted once every second
+--     G_TRIGGER = true   -> message is transmitted on the rising edge of i_DV
+--
 -- Timing Example: x
 -- Note: 
---   The module sends the full status message once every second.
 --   G_DATA_BYTES defines the number of input bytes to display.
 --   G_DUMMY_BITS defines the number of idle bit-times inserted after each
 --   UART frame format:
@@ -34,13 +39,14 @@ entity uart_tx_status is
         G_CLOCK_FREQ : integer := 100_000_000; 
         G_BAUD_RATE  : integer := 115_200;    -- Baud rate UART
         G_DATA_BYTES : integer := 1;          -- Input Byte 
-        G_DUMMY_BITS : integer := 15  -- n of dummy bit after each UART TX byte
+        G_DUMMY_BITS : integer := 2; -- n of dummy bit after each UART TX byte
+        G_TRIGGER    : boolean := true -- true= risig edge external trigger 
     );
     port (
         i_Clk  : in  std_logic;
         i_Data : in  std_logic_vector((G_DATA_BYTES * 8) - 1 downto 0 );  -- Input pin state
         o_TX   : out std_logic;
-        o_dTX  : out std_logic  -- Debug copy of UART TX line     
+        i_DV   : in  std_logic  
     );
 end uart_tx_status;
 
@@ -60,7 +66,8 @@ architecture Behavioral of uart_tx_status is
     signal sec_cnt  : unsigned(SEC_CNT_BITS  - 1 downto 0) := (others => '0');
 
     -- Signals
-    signal one_sec_tick : std_logic := '0';
+    signal tx_start   : std_logic := '0';
+    signal r_DV_prev : std_logic := '0';
 
     signal baud_tick    : std_logic := '0';
 
@@ -95,7 +102,7 @@ architecture Behavioral of uart_tx_status is
             when "1101" => return x"44"; -- 'D'
             when "1110" => return x"45"; -- 'E'
             when "1111" => return x"46"; -- 'F'
-            when others => return x"30";
+            when others => return x"3F"; -- '?'
         end case;
     end function;    
 
@@ -108,26 +115,43 @@ architecture Behavioral of uart_tx_status is
 begin
 
     o_TX <= r_TX;
-    o_dTX <= r_TX;
 
     --------------------------------------------------------------------
-    -- One-second tick generator
+    -- Trigger
     --------------------------------------------------------------------
-    process(i_Clk)
-    begin
-        if rising_edge(i_Clk) then
-
-            if sec_cnt = MAX_SEC_CNT then
-                sec_cnt      <= (others => '0');
-                one_sec_tick <= '1';
-            else
-                sec_cnt      <= sec_cnt + 1;
-                one_sec_tick <= '0';
+    
+    g_one_sec_trigger : if G_TRIGGER = false generate 
+    begin 
+        process(i_Clk)
+        begin
+            if rising_edge(i_Clk) then
+    
+                if sec_cnt = MAX_SEC_CNT then
+                    sec_cnt      <= (others => '0');
+                    tx_start <= '1';
+                else
+                    sec_cnt      <= sec_cnt + 1;
+                    tx_start <= '0';
+                end if;
+    
             end if;
+        end process;
+    end generate g_one_sec_trigger;
+    
+    g_trigger_ext : if G_TRIGGER = true generate 
+    begin 
+        trigger:process(i_Clk)
+        begin
+            if rising_edge(i_Clk) then
+        
+                r_DV_prev <= i_DV;
+                
+                tx_start <= i_DV and not r_DV_prev;
 
-        end if;
-    end process;
-
+            end if;
+        end process;      
+    end generate g_trigger_ext;
+    
     --------------------------------------------------------------------
     -- Baud tick generator, active only during UART transmission  
     --------------------------------------------------------------------
@@ -203,7 +227,7 @@ begin
                 r_TX <= '1'; -- UART line in idle state
                 bit_index <= 0;
 
-                if one_sec_tick = '1' then
+                if tx_start = '1' then
                     sending       <= '1';
                     message_index <= 0;
                     r_data        <= message(0);
@@ -238,7 +262,6 @@ begin
                         if ( message_index = MSG_LENGTH -1 ) then
                             sending   <= '0';
                         else                        
-                            bit_index <= 0;
                             message_index <= message_index + 1;
                             r_data <= message(message_index + 1);
                         end if;
