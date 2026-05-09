@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File     : uart_tx_status.vhd
 -- Author   : Jampag
--- Date     : 2026 may 03
+-- Date     : 2026 may 05
 -- Revision : 2.0
 -- Description:
 --   UART status transmitter example.
@@ -20,6 +20,29 @@
 --
 --     G_TRIGGER = false  -> message is transmitted once every second
 --     G_TRIGGER = true   -> message is transmitted on the rising edge of i_DV
+--
+-- Block Diagram:         
+
+-- Block Diagram:
+--                ____________________________________________________
+--               |                                                    |
+--      i_Clk -->|----+---------------+------------------+            |
+--               |    |               |                  |            |
+--               |    v               |                  v            |
+--               |   __________       |        __________________     |
+--      i_DV --> |--|          |      |       |                  |    |
+--               |  | Trigger  |------|------>|tx_start  UART TX |--->|- o_TX
+--               |  | logic    |      v       |__________________|    |
+--               |  |__________|  _____________________      ^        |
+--               |               |                     |     |        |
+--  i_Data[x:0]->|-------------->|i_Data[x:0]          |     |        |
+--               |               |    |                |     |        |
+--               |               |    V                |     |        |
+--               |               | hex_to_ascii        |     |        |
+--               |               |     |               |     |        |
+--               |               |     '--> msg_array()|-----'        |
+--               |               |_____________________|              |
+--               |____________________________________________________|
 --
 -- Timing Example: x
 -- Note: 
