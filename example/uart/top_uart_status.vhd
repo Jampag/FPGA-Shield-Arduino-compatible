@@ -30,7 +30,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Entity 
 entity top_uart_status is
     generic(
         DATA_IN  : integer := 1;
@@ -42,11 +41,16 @@ entity top_uart_status is
         o_TX   : out std_logic; -- UART Tx
         i_Data : in  std_logic_vector((DATA_IN * 8) - 1 downto 0);
         o_Data : out std_logic_vector((DATA_OUT * 8) - 1 downto 0);
-        i_DV   : in  std_logic  -- Trigger Tx
+        i_DV   : in  std_logic  -- Trigger Tx, not used
     );
 end top_uart_status; 
 
 architecture Behavioral of top_uart_status is
+
+    -- Constants
+    constant C_TX_DATA_BYTES : integer := DATA_OUT + DATA_IN;
+    constant C_OUT_BITS      : integer := DATA_OUT * 8;
+    constant C_TX_BITS       : integer := C_TX_DATA_BYTES * 8;
 
 
     -- Component declaration
@@ -82,9 +86,10 @@ architecture Behavioral of top_uart_status is
 
 
     -- Internal signals
-    signal w_DV : std_logic := '0';
-    signal w_i_Data_tx : std_logic_vector(((DATA_OUT + DATA_IN) * 8) - 1 downto 0) := (others => '0');
-    signal w_o_Data_rx : std_logic_vector((DATA_OUT * 8)- 1 downto 0) := (others => '0');
+    signal w_DV        : std_logic := '0';
+    signal w_i_Data_tx : std_logic_vector(C_TX_BITS - 1 downto 0) := (others => '0');
+    signal w_o_Data_rx : std_logic_vector(C_OUT_BITS - 1 downto 0) := (others => '0');
+
 
 
 begin
@@ -94,7 +99,7 @@ begin
         generic map (
             G_CLOCK_FREQ => 100_000_000,
             G_BAUD_RATE  => 115_200,
-            G_DATA_BYTES => DATA_OUT + DATA_IN,
+            G_DATA_BYTES => C_TX_DATA_BYTES,
             G_DUMMY_BITS => 2,
             G_TRIGGER    => true
         )  
@@ -111,7 +116,7 @@ begin
         generic map (
             G_CLOCK_FREQ => 100_000_000,
             G_BAUD_RATE  => 115_200,
-            G_DATA_BYTES => 1
+            G_DATA_BYTES => DATA_OUT
         ) 
         port map(
             i_Clk       => i_Clk,
@@ -120,9 +125,10 @@ begin
             o_Buf_Ready => w_DV
         );        
     
-    --Assignmets
-    w_i_Data_Tx( 15 downto 8 ) <= i_Data;
-    w_i_Data_Tx( 7 downto 0 ) <= w_o_Data_rx;
+    -- Assignments
+    w_i_Data_tx(C_TX_BITS - 1 downto C_OUT_BITS) <= i_Data;
+    w_i_Data_tx(C_OUT_BITS - 1 downto 0)         <= w_o_Data_rx;
+
     o_Data <= w_o_Data_rx;
     
     
