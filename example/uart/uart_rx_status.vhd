@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- File     : uart_rx_status.vhd
 -- Author   : Jampag
--- Date     : 2026 may 02
+-- Date     : 2026 may 05
 -- Revision : 1.0
 -- Description:
 --   UART status receiver.
@@ -28,6 +28,19 @@
 --   o_Buf_Ready indicates that the configured number of ASCII characters has
 --   been received and the output data buffer has been updated.
 --
+-- Block Diagram:                    
+--             _____________________________________________________
+--            |   __________    _______________________________     |
+--   i_RX  -->|--|          |  |                               |    |
+--            |  | UART RX  |--| r_Data[7:0]                   |    |
+--            |  | sampler  |--| r_DV                          |    |
+--            |  |__________|  |                               |--->|-- o_Buf_Ready
+--            |       |        |   o_Data[(G_DATA_BYTES*8)-1:0]|--->|-- o_Data[x:0]
+--   i_Clk -->|-------+--------|                               |    |
+--            |                |      ASCII HEX buffer         |    |
+--            |                |_______________________________|    |
+--            |_____________________________________________________|
+--                                                                
 -- Timing Example: x
 -- Note: 
 --   UART frame format:
