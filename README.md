@@ -33,6 +33,10 @@ Designed to integrate easily with Arduino R4 boards, this shield simplifies bits
 **Easy to upload bitstream :**
 > ![Video](https://github.com/user-attachments/assets/6bc3d29b-686b-4ca8-afb4-48053a7d0ab9)
 
+**Web App to upload bitstream(beta) :**
+
+<img width="400" height="481" alt="img_web" src="https://github.com/user-attachments/assets/e6785d45-4020-40a2-b80e-ea71785d7487" />
+
 
 ## Disclaimer
 
