@@ -37,6 +37,8 @@ Designed to integrate easily with Arduino R4 boards, this shield simplifies bits
 
 <img width="400" height="481" alt="img_web" src="https://github.com/user-attachments/assets/e6785d45-4020-40a2-b80e-ea71785d7487" />
 
+[WebApp.html](https://github.com/Jampag/FPGA-Shield-Arduino-compatible/blob/main/software/web_app.html)
+
 
 ## Disclaimer
 
