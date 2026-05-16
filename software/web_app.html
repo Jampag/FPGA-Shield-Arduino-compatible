@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<!--
+  Project: FPGA Shield - XMODEM Web Uploader
+  Generated with: GPT-5.5 Thinking
+  Date: 2026-05-16
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FPGA Shield - XMODEM Upload</title>
+
+  <style>
+    :root {
+      --page-bg: #202124;
+      --panel-bg: #ffffff;
+      --panel-fg: #111111;
+
+      --input-bg: #ffffff;
+      --input-fg: #111111;
+      --input-border: #aaaaaa;
+
+      --terminal-bg: #000000;
+      --terminal-fg: #ffffff;
+
+      --primary-color: #0275d8;
+      --success-color: #5cb85c;
+      --danger-color: #d9534f;
+      --warning-color: #f0ad4e;
+      --secondary-color: #666666;
+
+      --button-fg: #ffffff;
+      --shadow-color: #00000044;
+    }
+
+    html {
+      background: var(--page-bg);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: var(--page-bg);
+      color: var(--panel-fg);
+    }
+
+    .box {
+      background: var(--panel-bg);
+      color: var(--panel-fg);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 950px;
+      box-shadow: 0 2px 14px var(--shadow-color);
+    }
+
+    .title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .version-text {
+      font-size: 12px;
+      font-family: Consolas, "Courier New", monospace;
+      color: var(--panel-fg);
+      opacity: 0.65;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    select,
+    input,
+    button {
+      margin-top: 6px;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    select,
+    input {
+      background: var(--input-bg);
+      color: var(--input-fg);
+      border: 1px solid var(--input-border);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row button,
+    .row select {
+      flex: 1;
+    }
+
+    progress {
+      width: 100%;
+      height: 24px;
+      margin-top: 15px;
+    }
+
+    .terminal {
+      background: var(--terminal-bg);
+      color: var(--terminal-fg);
+      padding: 12px;
+      height: 420px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: auto;
+      margin-top: 15px;
+      font-size: 14px;
+      font-family: Consolas, "Courier New", monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: none;
+      outline: none;
+      border-radius: 6px;
+      line-height: 1.35;
+    }
+
+    .terminal:focus {
+      box-shadow: 0 0 0 2px var(--primary-color);
+    }
+
+    .status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .primary {
+      background: var(--primary-color);
+      color: var(--button-fg);
+    }
+
+    .success {
+      background: var(--success-color);
+      color: var(--button-fg);
+    }
+
+    .danger {
+      background: var(--danger-color);
+      color: var(--button-fg);
+    }
+
+    .secondary {
+      background: var(--secondary-color);
+      color: var(--button-fg);
+    }
+
+    .warning {
+      background: var(--warning-color);
+      color: var(--button-fg);
+    }
+
+    .theme-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .theme-btn {
+      width: auto;
+      min-width: 58px;
+      padding: 4px 7px;
+      margin-top: 0;
+      font-size: 11px;
+      border-radius: 5px;
+      border: 1px solid var(--input-border);
+      line-height: 1.2;
+    }
+
+    .theme-default { background: #202124; color: #ffffff; }
+    .theme-dark    { background: #121212; color: #ffffff; }
+    .theme-ocean   { background: #0b2538; color: #ffffff; }
+    .theme-amber   { background: #2a1f12; color: #ffcc66; }
+    .theme-light   { background: #eeeeee; color: #111111; }
+
+    /*
+      ANSI standard / Tera Term style.
+      Default console: white on black.
+    */
+
+    .fg-black          { color: #000000; }
+    .fg-red            { color: #800000; }
+    .fg-green          { color: #008000; }
+    .fg-yellow         { color: #808000; }
+    .fg-blue           { color: #000080; }
+    .fg-magenta        { color: #800080; }
+    .fg-cyan           { color: #008080; }
+    .fg-white          { color: #ffffff; }
+
+    .fg-bright-black   { color: #808080; }
+    .fg-bright-red     { color: #ff0000; }
+    .fg-bright-green   { color: #00ff00; }
+    .fg-bright-yellow  { color: #ffff00; }
+    .fg-bright-blue    { color: #0000ff; }
+    .fg-bright-magenta { color: #ff00ff; }
+    .fg-bright-cyan    { color: #00ffff; }
+    .fg-bright-white   { color: #ffffff; }
+
+    .bg-black          { background-color: #000000; }
+    .bg-red            { background-color: #800000; }
+    .bg-green          { background-color: #008000; }
+    .bg-yellow         { background-color: #808000; }
+    .bg-blue           { background-color: #000080; }
+    .bg-magenta        { background-color: #800080; }
+    .bg-cyan           { background-color: #008080; }
+    .bg-white          { background-color: #ffffff; }
+
+    .bg-bright-black   { background-color: #808080; }
+    .bg-bright-red     { background-color: #ff0000; }
+    .bg-bright-green   { background-color: #00ff00; }
+    .bg-bright-yellow  { background-color: #ffff00; }
+    .bg-bright-blue    { background-color: #0000ff; }
+    .bg-bright-magenta { background-color: #ff00ff; }
+    .bg-bright-cyan    { background-color: #00ffff; }
+    .bg-bright-white   { background-color: #ffffff; }
+
+    .ansi-bold {
+      font-weight: bold;
+    }
+
+    .ansi-dim {
+      opacity: 0.65;
+    }
+
+    .ansi-underline {
+      text-decoration: underline;
+    }
+
+    .ansi-inverse {
+      color: #000000 !important;
+      background-color: #ffffff !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="title-row">
+      <h2>FPGA Shield - XMODEM Upload</h2>
+      <div class="version-text">BETA v0.6</div>
+    </div>
+
+    <label>Serial Port</label>
+    <select id="portSelect">
+      <option value="">No port selected</option>
+    </select>
+
+    <div class="row">
+      <button id="selectComBtn" class="primary" onclick="requestSerialPort()">Select COM</button>
+      <button id="connectBtn" class="success" onclick="connectSerial()">Connect</button>
+      <button id="disconnectBtn" class="danger" onclick="disconnectSerial()">Disconnect</button>
+    </div>
+
+    <div class="status" id="connectionStatus">
+      Status: disconnected
+    </div>
+
+    <label>Binary File</label>
+    <input id="fileInput" type="file" accept=".bin,.bit,*/*" />
+
+    <label>FPGA Type</label>
+    <select id="fpgaSelect">
+      <option value="1">1 - Spartan-7 S6</option>
+      <option value="2" selected>2 - Spartan-7 S15</option>
+      <option value="3">3 - Spartan-7 S25</option>
+      <option value="4">4 - Spartan-7 S50</option>
+      <option value="5">5 - Custom size</option>
+    </select>
+
+    <label>XMODEM Speed</label>
+    <select id="speedSelect">
+      <option value="turbo">Turbo Fast - 132 bytes, 0 ms after ACK</option>
+      <option value="fast" selected>Fast - 132 bytes, 2 ms after ACK</option>
+      <option value="stable">Stable - 132 bytes, 5 ms after ACK</option>
+      <option value="safe">Safe - 132 bytes, 10 ms after ACK</option>
+    </select>
+
+    <div class="row">
+      <button id="uploadBtn" class="primary" onclick="uploadFile()">Upload XMODEM</button>
+      <button id="abortBtn" class="danger" onclick="abortUpload()" disabled>Abort Upload</button>
+    </div>
+
+    <progress id="progressBar" value="0" max="100"></progress>
+
+    <label>Serial Console</label>
+
+    <div class="row">
+      <button class="warning" onclick="sendCtrlC()">Send Ctrl+C</button>
+      <button class="warning" onclick="sendCtrlR()">Send Ctrl+R</button>
+      <button class="secondary" onclick="clearTerminal()">Clear Console</button>
+    </div>
+
+    <div id="terminal" class="terminal" tabindex="0"></div>
+
+    <label>Recovery</label>
+    <div class="row">
+      <button class="danger" onclick="hardResetWebApp()">Hard Reset Web App</button>
+      <button class="secondary" onclick="refreshPorts()">Refresh COM List</button>
+    </div>
+
+    <label>Theme</label>
+    <div class="theme-row">
+      <button class="theme-btn theme-default" onclick="applyTheme('default')">Default</button>
+      <button class="theme-btn theme-dark" onclick="applyTheme('dark')">Dark</button>
+      <button class="theme-btn theme-ocean" onclick="applyTheme('ocean')">Ocean</button>
+      <button class="theme-btn theme-amber" onclick="applyTheme('amber')">Amber</button>
+      <button class="theme-btn theme-light" onclick="applyTheme('light')">Light</button>
+    </div>
+  </div>
+
+  <script>
+    const SOH = 0x01;
+    const EOT = 0x04;
+    const ACK = 0x06;
+    const NAK = 0x15;
+    const CAN = 0x18;
+
+    const CTRL_C = 0x03;
+    const CTRL_R = 0x12;
+
+    const BLOCK_SIZE = 128;
+    const XMODEM_PACKET_SIZE = 132;
+
+    const SERIAL_WRITE_TIMEOUT_MS = 5000;
+    const XMODEM_RESPONSE_TIMEOUT_MS = 10000;
+    const XMODEM_START_TIMEOUT_MS = 30000;
+
+    let ports = [];
+    let selectedPort = null;
+    let reader = null;
+    let writer = null;
+
+    let rxQueue = [];
+    let rxTextBuffer = "";
+
+    let keepReading = false;
+    let isConnected = false;
+    let isUploading = false;
+    let xmodemConsoleMute = false;
+    let abortUploadRequested = false;
+    let cleanupInProgress = false;
+
+    let terminalNodeCount = 0;
+    let terminalScrollPending = false;
+
+    let ansiState = "normal";
+    let ansiSequence = "";
+
+    let currentFg = "";
+    let currentBg = "";
+    let currentBold = false;
+    let currentDim = false;
+    let currentUnderline = false;
+    let currentInverse = false;
+
+    const terminal = document.getElementById("terminal");
+    const portSelect = document.getElementById("portSelect");
+    const fileInput = document.getElementById("fileInput");
+    const fpgaSelect = document.getElementById("fpgaSelect");
+    const speedSelect = document.getElementById("speedSelect");
+    const progressBar = document.getElementById("progressBar");
+    const connectionStatus = document.getElementById("connectionStatus");
+
+    const uploadBtn = document.getElementById("uploadBtn");
+    const abortBtn = document.getElementById("abortBtn");
+    const selectComBtn = document.getElementById("selectComBtn");
+    const connectBtn = document.getElementById("connectBtn");
+    const disconnectBtn = document.getElementById("disconnectBtn");
+
+    function applyTheme(name) {
+      const root = document.documentElement;
+
+      const themes = {
+        default: {
+          page: "#202124",
+          panel: "#ffffff",
+          panelFg: "#111111",
+          inputBg: "#ffffff",
+          inputFg: "#111111",
+          inputBorder: "#aaaaaa",
+          terminalBg: "#000000",
+          terminalFg: "#ffffff",
+          primary: "#0275d8",
+          success: "#5cb85c",
+          danger: "#d9534f",
+          warning: "#f0ad4e",
+          secondary: "#666666",
+          buttonFg: "#ffffff",
+          shadow: "#00000044"
+        },
+
+        dark: {
+          page: "#121212",
+          panel: "#1e1e1e",
+          panelFg: "#f0f0f0",
+          inputBg: "#2b2b2b",
+          inputFg: "#ffffff",
+          inputBorder: "#555555",
+          terminalBg: "#000000",
+          terminalFg: "#ffffff",
+          primary: "#3b82f6",
+          success: "#22c55e",
+          danger: "#ef4444",
+          warning: "#f59e0b",
+          secondary: "#6b7280",
+          buttonFg: "#ffffff",
+          shadow: "#000000aa"
+        },
+
+        ocean: {
+          page: "#0b2538",
+          panel: "#102f44",
+          panelFg: "#e8f6ff",
+          inputBg: "#163b54",
+          inputFg: "#ffffff",
+          inputBorder: "#3b82a0",
+          terminalBg: "#00111c",
+          terminalFg: "#d9f7ff",
+          primary: "#0088cc",
+          success: "#00a878",
+          danger: "#d64550",
+          warning: "#f2a541",
+          secondary: "#4b7188",
+          buttonFg: "#ffffff",
+          shadow: "#00000099"
+        },
+
+        amber: {
+          page: "#2a1f12",
+          panel: "#3a2a17",
+          panelFg: "#ffe7b3",
+          inputBg: "#4a351d",
+          inputFg: "#fff3d6",
+          inputBorder: "#8a6a3a",
+          terminalBg: "#000000",
+          terminalFg: "#ffcc66",
+          primary: "#c47f00",
+          success: "#6f9e3f",
+          danger: "#b84632",
+          warning: "#d99a22",
+          secondary: "#7a6750",
+          buttonFg: "#ffffff",
+          shadow: "#000000aa"
+        },
+
+        light: {
+          page: "#d8d8d8",
+          panel: "#ffffff",
+          panelFg: "#111111",
+          inputBg: "#ffffff",
+          inputFg: "#111111",
+          inputBorder: "#999999",
+          terminalBg: "#000000",
+          terminalFg: "#ffffff",
+          primary: "#0275d8",
+          success: "#4caf50",
+          danger: "#d9534f",
+          warning: "#e69500",
+          secondary: "#666666",
+          buttonFg: "#ffffff",
+          shadow: "#00000033"
+        }
+      };
+
+      const theme = themes[name] || themes.default;
+
+      root.style.setProperty("--page-bg", theme.page);
+      root.style.setProperty("--panel-bg", theme.panel);
+      root.style.setProperty("--panel-fg", theme.panelFg);
+
+      root.style.setProperty("--input-bg", theme.inputBg);
+      root.style.setProperty("--input-fg", theme.inputFg);
+      root.style.setProperty("--input-border", theme.inputBorder);
+
+      root.style.setProperty("--terminal-bg", theme.terminalBg);
+      root.style.setProperty("--terminal-fg", theme.terminalFg);
+
+      root.style.setProperty("--primary-color", theme.primary);
+      root.style.setProperty("--success-color", theme.success);
+      root.style.setProperty("--danger-color", theme.danger);
+      root.style.setProperty("--warning-color", theme.warning);
+      root.style.setProperty("--secondary-color", theme.secondary);
+      root.style.setProperty("--button-fg", theme.buttonFg);
+      root.style.setProperty("--shadow-color", theme.shadow);
+    }
+
+    function setStatus(text) {
+      connectionStatus.textContent = "Status: " + text;
+    }
+
+    function setUploadUi(active) {
+      uploadBtn.disabled = active;
+      abortBtn.disabled = !active;
+      selectComBtn.disabled = active;
+      connectBtn.disabled = active;
+      speedSelect.disabled = active;
+      fpgaSelect.disabled = active;
+      fileInput.disabled = active;
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function throwIfAborted() {
+      if (abortUploadRequested) {
+        throw new Error("Upload aborted by user");
+      }
+    }
+
+    function getSpeedProfile() {
+      const mode = speedSelect.value;
+
+      if (mode === "turbo") {
+        return {
+          ackDelayMs: 0
+        };
+      }
+
+      if (mode === "fast") {
+        return {
+          ackDelayMs: 2
+        };
+      }
+
+      if (mode === "stable") {
+        return {
+          ackDelayMs: 5
+        };
+      }
+
+      return {
+        ackDelayMs: 10
+      };
+    }
+
+    function clearTerminal() {
+      terminal.innerHTML = "";
+      terminalNodeCount = 0;
+      resetAnsiStyle();
+      ansiState = "normal";
+      ansiSequence = "";
+      terminal.focus();
+    }
+
+    function scheduleScroll() {
+      if (terminalScrollPending) {
+        return;
+      }
+
+      terminalScrollPending = true;
+
+      requestAnimationFrame(() => {
+        terminal.scrollTop = terminal.scrollHeight;
+        terminalScrollPending = false;
+      });
+    }
+
+    function trimTerminalIfNeeded() {
+      if (terminalNodeCount < 4000) {
+        return;
+      }
+
+      while (terminal.childNodes.length > 2500) {
+        terminal.removeChild(terminal.firstChild);
+      }
+
+      terminalNodeCount = terminal.childNodes.length;
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function getCurrentClassName() {
+      const classes = [];
+
+      if (currentFg) classes.push(currentFg);
+      if (currentBg) classes.push(currentBg);
+      if (currentBold) classes.push("ansi-bold");
+      if (currentDim) classes.push("ansi-dim");
+      if (currentUnderline) classes.push("ansi-underline");
+      if (currentInverse) classes.push("ansi-inverse");
+
+      return classes.join(" ");
+    }
+
+    function appendStyledText(text) {
+      if (!text || text.length === 0) {
+        return;
+      }
+
+      const span = document.createElement("span");
+      span.className = getCurrentClassName();
+      span.innerHTML = escapeHtml(text);
+
+      terminal.appendChild(span);
+      terminalNodeCount++;
+
+      trimTerminalIfNeeded();
+      scheduleScroll();
+    }
+
+    function resetAnsiStyle() {
+      currentFg = "";
+      currentBg = "";
+      currentBold = false;
+      currentDim = false;
+      currentUnderline = false;
+      currentInverse = false;
+    }
+
+    function applySgrCode(code) {
+      if (code === 0) {
+        resetAnsiStyle();
+        return;
+      }
+
+      if (code === 1) {
+        currentBold = true;
+        return;
+      }
+
+      if (code === 2) {
+        currentDim = true;
+        return;
+      }
+
+      if (code === 4) {
+        currentUnderline = true;
+        return;
+      }
+
+      if (code === 7) {
+        currentInverse = true;
+        return;
+      }
+
+      if (code === 22) {
+        currentBold = false;
+        currentDim = false;
+        return;
+      }
+
+      if (code === 24) {
+        currentUnderline = false;
+        return;
+      }
+
+      if (code === 27) {
+        currentInverse = false;
+        return;
+      }
+
+      if (code === 39) {
+        currentFg = "";
+        return;
+      }
+
+      if (code === 49) {
+        currentBg = "";
+        return;
+      }
+
+      const fgMap = {
+        30: "fg-black",
+        31: "fg-red",
+        32: "fg-green",
+        33: "fg-yellow",
+        34: "fg-blue",
+        35: "fg-magenta",
+        36: "fg-cyan",
+        37: "fg-white",
+        90: "fg-bright-black",
+        91: "fg-bright-red",
+        92: "fg-bright-green",
+        93: "fg-bright-yellow",
+        94: "fg-bright-blue",
+        95: "fg-bright-magenta",
+        96: "fg-bright-cyan",
+        97: "fg-bright-white"
+      };
+
+      const bgMap = {
+        40: "bg-black",
+        41: "bg-red",
+        42: "bg-green",
+        43: "bg-yellow",
+        44: "bg-blue",
+        45: "bg-magenta",
+        46: "bg-cyan",
+        47: "bg-white",
+        100: "bg-bright-black",
+        101: "bg-bright-red",
+        102: "bg-bright-green",
+        103: "bg-bright-yellow",
+        104: "bg-bright-blue",
+        105: "bg-bright-magenta",
+        106: "bg-bright-cyan",
+        107: "bg-bright-white"
+      };
+
+      if (fgMap[code]) {
+        currentFg = fgMap[code];
+        return;
+      }
+
+      if (bgMap[code]) {
+        currentBg = bgMap[code];
+        return;
+      }
+    }
+
+    function applyAnsiSequence(seq) {
+      if (!seq.startsWith("\x1B[")) {
+        return;
+      }
+
+      const finalChar = seq[seq.length - 1];
+
+      if (finalChar !== "m") {
+        return;
+      }
+
+      const body = seq.slice(2, -1);
+
+      if (body.length === 0) {
+        resetAnsiStyle();
+        return;
+      }
+
+      const codes = body
+        .split(";")
+        .filter(x => x.length > 0)
+        .map(x => Number(x));
+
+      if (codes.length === 0) {
+        resetAnsiStyle();
+        return;
+      }
+
+      for (const code of codes) {
+        if (!Number.isNaN(code)) {
+          applySgrCode(code);
+        }
+      }
+    }
+
+    function terminalPrintByte(byte) {
+      const ch = String.fromCharCode(byte);
+
+      if (ansiState === "escape") {
+        ansiSequence += ch;
+
+        if (ansiSequence === "\x1B[") {
+          ansiState = "csi";
+          return;
+        }
+
+        ansiState = "normal";
+        ansiSequence = "";
+        return;
+      }
+
+      if (ansiState === "csi") {
+        ansiSequence += ch;
+
+        if (byte >= 0x40 && byte <= 0x7E) {
+          applyAnsiSequence(ansiSequence);
+          ansiState = "normal";
+          ansiSequence = "";
+        }
+
+        return;
+      }
+
+      if (byte === 0x1B) {
+        ansiState = "escape";
+        ansiSequence = "\x1B";
+        return;
+      }
+
+      if (byte === 0x0D) {
+        return;
+      }
+
+      if (byte === 0x0A) {
+        appendStyledText("\n");
+        return;
+      }
+
+      if (byte === 0x08) {
+        return;
+      }
+
+      if (byte === 0x09) {
+        appendStyledText("\t");
+        return;
+      }
+
+      if (byte >= 0x20 && byte <= 0x7E) {
+        appendStyledText(ch);
+        return;
+      }
+    }
+
+    function updateRxTextBuffer(byte) {
+      if (byte >= 0x20 && byte <= 0x7E) {
+        rxTextBuffer += String.fromCharCode(byte);
+      } else if (byte === 0x0A || byte === 0x0D) {
+        rxTextBuffer += "\n";
+      }
+
+      if (rxTextBuffer.length > 8000) {
+        rxTextBuffer = rxTextBuffer.slice(-4000);
+      }
+    }
+
+    function resetRuntimeState() {
+      rxQueue = [];
+      rxTextBuffer = "";
+
+      keepReading = false;
+      isConnected = false;
+      isUploading = false;
+      xmodemConsoleMute = false;
+      abortUploadRequested = false;
+
+      reader = null;
+      writer = null;
+      selectedPort = null;
+
+      progressBar.value = 0;
+      setUploadUi(false);
+    }
+
+    async function waitForText(pattern, timeoutMs) {
+      const start = Date.now();
+
+      while (Date.now() - start < timeoutMs) {
+        throwIfAborted();
+
+        if (rxTextBuffer.includes(pattern)) {
+          return true;
+        }
+
+        await delay(20);
+      }
+
+      throw new Error("Timeout: did not receive \"" + pattern + "\"");
+    }
+
+    async function refreshPorts() {
+      if (!("serial" in navigator)) {
+        alert("Web Serial API is not supported. Use Chrome or Edge.");
+        return;
+      }
+
+      ports = await navigator.serial.getPorts();
+      portSelect.innerHTML = "";
+
+      if (ports.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "No authorized ports";
+        portSelect.appendChild(option);
+        return;
+      }
+
+      ports.forEach((port, index) => {
+        const info = port.getInfo();
+
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent =
+          "Authorized COM " +
+          (index + 1) +
+          " - USB VID: " +
+          (info.usbVendorId ?? "N/A") +
+          " PID: " +
+          (info.usbProductId ?? "N/A");
+
+        portSelect.appendChild(option);
+      });
+    }
+
+    async function requestSerialPort() {
+      try {
+        if (!("serial" in navigator)) {
+          alert("Web Serial API is not supported. Use Chrome or Edge.");
+          return;
+        }
+
+        selectedPort = await navigator.serial.requestPort();
+        await refreshPorts();
+
+        const index = ports.indexOf(selectedPort);
+
+        if (index >= 0) {
+          portSelect.value = index;
+        }
+
+        setStatus("port authorized");
+
+      } catch (err) {
+        setStatus("COM selection canceled");
+      }
+    }
+
+    async function connectSerial() {
+      try {
+        if (isConnected) {
+          return;
+        }
+
+        if (!("serial" in navigator)) {
+          alert("Web Serial API is not supported. Use Chrome or Edge.");
+          return;
+        }
+
+        if (!selectedPort) {
+          const index = portSelect.value;
+
+          if (index === "") {
+            alert("Select a COM port first.");
+            return;
+          }
+
+          selectedPort = ports[Number(index)];
+        }
+
+        await selectedPort.open({
+          baudRate: 115200,
+          dataBits: 8,
+          stopBits: 1,
+          parity: "none",
+          flowControl: "none"
+        });
+
+        writer = selectedPort.writable.getWriter();
+        reader = selectedPort.readable.getReader();
+
+        rxQueue = [];
+        rxTextBuffer = "";
+
+        keepReading = true;
+        isConnected = true;
+        isUploading = false;
+        xmodemConsoleMute = false;
+        abortUploadRequested = false;
+
+        setStatus("connected at 115200 baud");
+
+        terminal.focus();
+        readLoop();
+
+      } catch (err) {
+        setStatus("connection error: " + err.message);
+      }
+    }
+
+    async function softSerialCleanup(sendCan) {
+      if (cleanupInProgress) {
+        return;
+      }
+
+      cleanupInProgress = true;
+
+      try {
+        abortUploadRequested = true;
+        keepReading = false;
+        isUploading = false;
+        xmodemConsoleMute = false;
+
+        if (sendCan && writer) {
+          try {
+            await writeBytesRaw([CAN], 500);
+          } catch (e) {}
+        }
+
+        if (reader) {
+          try {
+            await reader.cancel();
+          } catch (e) {}
+
+          try {
+            reader.releaseLock();
+          } catch (e) {}
+
+          reader = null;
+        }
+
+        if (writer) {
+          try {
+            await writer.abort();
+          } catch (e) {}
+
+          try {
+            writer.releaseLock();
+          } catch (e) {}
+
+          writer = null;
+        }
+
+        if (selectedPort) {
+          try {
+            await selectedPort.close();
+          } catch (e) {}
+
+          selectedPort = null;
+        }
+
+        rxQueue = [];
+        rxTextBuffer = "";
+
+        isConnected = false;
+        isUploading = false;
+        xmodemConsoleMute = false;
+        abortUploadRequested = false;
+
+      } finally {
+        cleanupInProgress = false;
+        setUploadUi(false);
+      }
+    }
+
+    async function disconnectSerial() {
+      try {
+        if (!selectedPort && !isConnected) {
+          setStatus("disconnected");
+          return;
+        }
+
+        await softSerialCleanup(isUploading);
+        setStatus("disconnected");
+        await refreshPorts();
+
+      } catch (err) {
+        setStatus("disconnect error: " + err.message);
+      }
+    }
+
+    async function hardResetWebApp() {
+      setStatus("hard reset in progress");
+
+      try {
+        abortUploadRequested = true;
+        await softSerialCleanup(true);
+      } catch (e) {
+        // best effort
+      }
+
+      resetRuntimeState();
+
+      try {
+        await refreshPorts();
+      } catch (e) {}
+
+      setStatus("web app state reset");
+    }
+
+    async function emergencyPageCleanup() {
+      abortUploadRequested = true;
+      keepReading = false;
+      isUploading = false;
+      xmodemConsoleMute = false;
+
+      try {
+        if (writer) {
+          try {
+            await writer.write(new Uint8Array([CAN]));
+          } catch (e) {}
+
+          try {
+            await writer.abort();
+          } catch (e) {}
+
+          try {
+            writer.releaseLock();
+          } catch (e) {}
+        }
+      } catch (e) {}
+
+      try {
+        if (reader) {
+          try {
+            await reader.cancel();
+          } catch (e) {}
+
+          try {
+            reader.releaseLock();
+          } catch (e) {}
+        }
+      } catch (e) {}
+
+      try {
+        if (selectedPort) {
+          await selectedPort.close();
+        }
+      } catch (e) {}
+    }
+
+    async function readLoop() {
+      while (keepReading && reader) {
+        try {
+          const { value, done } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          if (value) {
+            for (const b of value) {
+              rxQueue.push(b);
+              updateRxTextBuffer(b);
+
+              if (!xmodemConsoleMute) {
+                terminalPrintByte(b);
+              }
+            }
+          }
+        } catch (err) {
+          if (keepReading) {
+            setStatus("serial read error: " + err.message);
+          }
+          break;
+        }
+      }
+    }
+
+    async function readByte(timeoutMs = 10000) {
+      const start = Date.now();
+
+      while (Date.now() - start < timeoutMs) {
+        throwIfAborted();
+
+        if (rxQueue.length > 0) {
+          return rxQueue.shift();
+        }
+
+        await delay(1);
+      }
+
+      throw new Error("Timeout waiting for byte");
+    }
+
+    async function readXmodemResponse(timeoutMs = XMODEM_RESPONSE_TIMEOUT_MS) {
+      const start = Date.now();
+
+      while (Date.now() - start < timeoutMs) {
+        throwIfAborted();
+
+        if (rxQueue.length > 0) {
+          const b = rxQueue.shift();
+
+          if (b === ACK || b === NAK || b === CAN) {
+            return b;
+          }
+
+          continue;
+        }
+
+        await delay(1);
+      }
+
+      throw new Error("Timeout waiting for XMODEM response");
+    }
+
+    async function writeWithTimeout(data, timeoutMs = SERIAL_WRITE_TIMEOUT_MS) {
+      if (!writer) {
+        throw new Error("Serial port is not connected");
+      }
+
+      throwIfAborted();
+
+      let timeoutId;
+
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error("Serial write timeout"));
+        }, timeoutMs);
+      });
+
+      try {
+        await Promise.race([
+          writer.write(data),
+          timeoutPromise
+        ]);
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    async function writeBytesRaw(bytes, timeoutMs = SERIAL_WRITE_TIMEOUT_MS) {
+      const data = new Uint8Array(bytes);
+      await writeWithTimeout(data, timeoutMs);
+    }
+
+    async function writeTextRaw(text) {
+      if (!writer) {
+        throw new Error("Serial port is not connected");
+      }
+
+      const encoder = new TextEncoder();
+      await writeWithTimeout(encoder.encode(text), SERIAL_WRITE_TIMEOUT_MS);
+    }
+
+    function checksum128(block) {
+      let sum = 0;
+
+      for (let i = 0; i < block.length; i++) {
+        sum = (sum + block[i]) & 0xFF;
+      }
+
+      return sum;
+    }
+
+    function buildXmodemPacket(blockNumber, data128) {
+      const packet = new Uint8Array(XMODEM_PACKET_SIZE);
+
+      packet[0] = SOH;
+      packet[1] = blockNumber & 0xFF;
+      packet[2] = 0xFF - packet[1];
+
+      packet.set(data128, 3);
+      packet[131] = checksum128(data128);
+
+      return packet;
+    }
+
+    async function waitForNak() {
+      while (true) {
+        const b = await readByte(XMODEM_START_TIMEOUT_MS);
+
+        if (b === NAK) {
+          xmodemConsoleMute = true;
+          return;
+        }
+
+        if (b === CAN) {
+          throw new Error("Arduino canceled the transfer");
+        }
+      }
+    }
+
+    async function sendXmodem(fileBuffer) {
+      const file = new Uint8Array(fileBuffer);
+      const speed = getSpeedProfile();
+
+      setStatus("waiting for XMODEM NAK");
+      await waitForNak();
+
+      isUploading = true;
+      setStatus("XMODEM active");
+
+      let blockNumber = 1;
+      let offset = 0;
+      let lastPercent = -1;
+
+      while (offset < file.length) {
+        throwIfAborted();
+
+        const block = new Uint8Array(BLOCK_SIZE);
+        block.fill(0x1A);
+
+        const chunk = file.slice(offset, offset + BLOCK_SIZE);
+        block.set(chunk, 0);
+
+        const packet = buildXmodemPacket(blockNumber, block);
+
+        let accepted = false;
+
+        for (let retry = 0; retry < 10; retry++) {
+          throwIfAborted();
+
+          /*
+            Important:
+            One XMODEM packet is always written as one full 132-byte packet.
+            This reduces the number of Web Serial writes and keeps the state
+            machine simpler.
+          */
+          await writeWithTimeout(packet, SERIAL_WRITE_TIMEOUT_MS);
+
+          const response = await readXmodemResponse(XMODEM_RESPONSE_TIMEOUT_MS);
+
+          if (response === ACK) {
+            accepted = true;
+
+            if (speed.ackDelayMs > 0) {
+              await delay(speed.ackDelayMs);
+            }
+
+            break;
+          }
+
+          if (response === NAK) {
+            if (speed.ackDelayMs > 0) {
+              await delay(speed.ackDelayMs);
+            }
+
+            continue;
+          }
+
+          if (response === CAN) {
+            throw new Error("Transfer canceled by Arduino");
+          }
+        }
+
+        if (!accepted) {
+          try {
+            await writeBytesRaw([CAN], 1000);
+          } catch (e) {}
+
+          throw new Error("Too many retries on block " + blockNumber);
+        }
+
+        offset += BLOCK_SIZE;
+        blockNumber = (blockNumber + 1) & 0xFF;
+
+        const percent = Math.min(Math.floor((offset / file.length) * 100), 100);
+
+        if (percent !== lastPercent) {
+          progressBar.value = percent;
+          setStatus("XMODEM upload: " + percent + "%");
+          lastPercent = percent;
+        }
+      }
+
+      xmodemConsoleMute = false;
+      isUploading = false;
+
+      setStatus("sending EOT");
+
+      while (true) {
+        throwIfAborted();
+
+        await writeBytesRaw([EOT], SERIAL_WRITE_TIMEOUT_MS);
+
+        const response = await readXmodemResponse(XMODEM_RESPONSE_TIMEOUT_MS);
+
+        if (response === ACK) {
+          progressBar.value = 100;
+          setStatus("upload completed");
+          break;
+        }
+
+        if (response === CAN) {
+          throw new Error("Arduino canceled after EOT");
+        }
+      }
+    }
+
+    async function uploadFile() {
+      try {
+        if (!isConnected || !writer) {
+          alert("Connect the COM port first.");
+          return;
+        }
+
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Select a binary file first.");
+          return;
+        }
+
+        progressBar.value = 0;
+
+        rxQueue = [];
+        rxTextBuffer = "";
+
+        isUploading = false;
+        xmodemConsoleMute = false;
+        abortUploadRequested = false;
+
+        setUploadUi(true);
+
+        const buffer = await file.arrayBuffer();
+        const fpgaType = fpgaSelect.value;
+
+        setStatus("sending command 2");
+
+        await writeTextRaw("2\r");
+
+        setStatus("waiting for FPGA selection prompt");
+        await waitForText("Enter FPGA size", 30000);
+
+        setStatus("selecting FPGA " + fpgaType);
+        await writeTextRaw(fpgaType + "\r");
+
+        if (fpgaType === "5") {
+          setStatus("waiting for custom size prompt");
+          await waitForText("Enter custom file size", 30000);
+
+          const hexSize = buffer.byteLength.toString(16).toUpperCase();
+
+          setStatus("sending custom size HEX " + hexSize);
+          await writeTextRaw(hexSize + "\r");
+        }
+
+        await sendXmodem(buffer);
+
+      } catch (err) {
+        isUploading = false;
+        xmodemConsoleMute = false;
+
+        if (err.message === "Upload aborted by user") {
+          setStatus("upload aborted");
+        } else {
+          setStatus("error: " + err.message);
+          await softSerialCleanup(true);
+        }
+
+      } finally {
+        isUploading = false;
+        xmodemConsoleMute = false;
+        abortUploadRequested = false;
+        setUploadUi(false);
+      }
+    }
+
+    async function abortUpload() {
+      abortUploadRequested = true;
+      setStatus("aborting upload");
+
+      try {
+        if (writer) {
+          await writeBytesRaw([CAN], 1000);
+        }
+      } catch (err) {
+        // Ignore abort write errors
+      }
+
+      await softSerialCleanup(false);
+
+      isUploading = false;
+      xmodemConsoleMute = false;
+      setUploadUi(false);
+      setStatus("upload aborted");
+    }
+
+    async function sendCtrlC() {
+      try {
+        if (!isConnected || !writer) {
+          alert("Connect the COM port first.");
+          return;
+        }
+
+        await writeBytesRaw([CTRL_C]);
+        terminal.focus();
+
+      } catch (err) {
+        setStatus("Ctrl+C send error: " + err.message);
+      }
+    }
+
+    async function sendCtrlR() {
+      try {
+        if (!isConnected || !writer) {
+          alert("Connect the COM port first.");
+          return;
+        }
+
+        await writeBytesRaw([CTRL_R]);
+        terminal.focus();
+
+      } catch (err) {
+        setStatus("Ctrl+R send error: " + err.message);
+      }
+    }
+
+    terminal.addEventListener("keydown", async function(event) {
+      if (!isConnected || !writer) {
+        return;
+      }
+
+      if (isUploading || xmodemConsoleMute) {
+        event.preventDefault();
+        return;
+      }
+
+      try {
+        if (event.ctrlKey && event.key.toLowerCase() === "c") {
+          event.preventDefault();
+          await sendCtrlC();
+          return;
+        }
+
+        if (event.ctrlKey && event.key.toLowerCase() === "r") {
+          event.preventDefault();
+          await sendCtrlR();
+          return;
+        }
+
+        if (event.key === "Enter") {
+          event.preventDefault();
+          await writeTextRaw("\r");
+          return;
+        }
+
+        if (event.key === "Backspace") {
+          event.preventDefault();
+          await writeBytesRaw([0x08]);
+          return;
+        }
+
+        if (event.key === "Tab") {
+          event.preventDefault();
+          await writeTextRaw("\t");
+          return;
+        }
+
+        if (event.key.length === 1) {
+          event.preventDefault();
+          await writeTextRaw(event.key);
+          return;
+        }
+
+      } catch (err) {
+        setStatus("console write error: " + err.message);
+      }
+    });
+
+    terminal.addEventListener("paste", async function(event) {
+      if (!isConnected || !writer || isUploading || xmodemConsoleMute) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+
+      const text = event.clipboardData.getData("text");
+
+      if (text.length > 0) {
+        await writeTextRaw(text);
+      }
+    });
+
+    terminal.addEventListener("click", function() {
+      terminal.focus();
+    });
+
+    navigator.serial?.addEventListener("connect", async () => {
+      setStatus("serial device connected");
+      await refreshPorts();
+    });
+
+    navigator.serial?.addEventListener("disconnect", async () => {
+      keepReading = false;
+      isConnected = false;
+      isUploading = false;
+      xmodemConsoleMute = false;
+      abortUploadRequested = true;
+
+      reader = null;
+      writer = null;
+      selectedPort = null;
+      rxQueue = [];
+
+      setUploadUi(false);
+      setStatus("ERROR: serial device disconnected during operation");
+
+      await refreshPorts();
+    });
+
+    window.addEventListener("pagehide", () => {
+      emergencyPageCleanup();
+    });
+
+    window.addEventListener("beforeunload", () => {
+      emergencyPageCleanup();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && isUploading) {
+        abortUploadRequested = true;
+      }
+    });
+
+    applyTheme("default");
+    refreshPorts();
+  </script>
+</body>
+</html>
