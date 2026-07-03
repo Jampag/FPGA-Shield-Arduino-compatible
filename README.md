@@ -19,6 +19,7 @@ Designed to integrate easily with Arduino R4 boards, this shield simplifies bits
 - Documentazione disponibile:  
   - Guida rapida in italiano [Quick-start-guide ITALIAN](documents/Quick-start-GR01.pdf) 
   - Diagramma a blocchi [BlockDiagram.pdf](documents/BlockDiagram.pdf)
+  - Course [Course FPGA](/documents/Corso-FPGA-CF01.pdf)
 
 `EN`  
 - Compatible with Arduino R4 as a shield  
@@ -27,6 +28,7 @@ Designed to integrate easily with Arduino R4 boards, this shield simplifies bits
 - Documentation available:  
   - Quick-start guide [Quick-start-guide ENGLISH](documents/Quick-start-GR01EN.pdf)  
   - Block diagram [BlockDiagram.pdf](documents/BlockDiagram.pdf)
+  - Course [Course FPGA](/documents/Corso-FPGA-CF01.pdf)
 
 
 
